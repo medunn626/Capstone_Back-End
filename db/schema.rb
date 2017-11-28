@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171128204113) do
+ActiveRecord::Schema.define(version: 20171128221933) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -24,6 +24,8 @@ ActiveRecord::Schema.define(version: 20171128204113) do
     t.string "elevator_pitch"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "user_id"
+    t.index ["user_id"], name: "index_cards_on_user_id"
   end
 
   create_table "examples", force: :cascade do |t|
@@ -42,6 +44,8 @@ ActiveRecord::Schema.define(version: 20171128204113) do
     t.string "other"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "card_id"
+    t.index ["card_id"], name: "index_links_lists_on_card_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -54,5 +58,7 @@ ActiveRecord::Schema.define(version: 20171128204113) do
     t.index ["token"], name: "index_users_on_token", unique: true
   end
 
+  add_foreign_key "cards", "users"
   add_foreign_key "examples", "users"
+  add_foreign_key "links_lists", "cards"
 end
