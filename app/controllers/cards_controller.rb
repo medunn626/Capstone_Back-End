@@ -16,7 +16,7 @@ class CardsController < ProtectedController
 
   # POST /cards
   def create
-    @card = current_user.build_card(card_params)
+    @card = current_user.cards.build(card_params)
     if @card.save
       render json: @card, status: :created
     else
@@ -47,6 +47,6 @@ class CardsController < ProtectedController
 
     # Only allow a trusted parameter "white list" through.
     def card_params
-      params.require(:card).permit(:name, :photo_url, :type, :phone_number, :email, :elevator_pitch)
+      params.require(:card).permit(:name, :photo_url, :type_of_card, :phone_number, :email, :elevator_pitch)
     end
 end
