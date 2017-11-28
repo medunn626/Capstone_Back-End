@@ -1,10 +1,11 @@
-class LinksListsController < ApplicationController
-  before_action :set_links_list, only: [:show, :update, :destroy]
+# frozen_string_literal: true
+
+class LinksListsController < ProtectedController
+  before_action :set_links_list, only: %i[index show update destroy]
 
   # GET /links_lists
   def index
-    @links_lists = LinksList.all
-
+    @links_lists = current_user.links_lists
     render json: @links_lists
   end
 
@@ -15,10 +16,9 @@ class LinksListsController < ApplicationController
 
   # POST /links_lists
   def create
-    @links_list = LinksList.new(links_list_params)
-
+    @links_list = current_user.build_links_list(links_list_params)
     if @links_list.save
-      render json: @links_list, status: :created, location: @links_list
+      render json: @links_list, status: :created
     else
       render json: @links_list.errors, status: :unprocessable_entity
     end
@@ -36,12 +36,13 @@ class LinksListsController < ApplicationController
   # DELETE /links_lists/1
   def destroy
     @links_list.destroy
+    head :no_content
   end
 
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_links_list
-      @links_list = LinksList.find(params[:id])
+      @links_list = current_user.links_list.find(params[:id])
     end
 
     # Only allow a trusted parameter "white list" through.

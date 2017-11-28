@@ -1,10 +1,11 @@
-class CardsController < ApplicationController
-  before_action :set_card, only: [:show, :update, :destroy]
+# frozen_string_literal: true
+
+class CardsController < ProtectedController
+  before_action :set_card, only: %i[show update destroy]
 
   # GET /cards
   def index
-    @cards = Card.all
-
+    @cards = current_user.cards
     render json: @cards
   end
 
@@ -15,10 +16,9 @@ class CardsController < ApplicationController
 
   # POST /cards
   def create
-    @card = Card.new(card_params)
-
+    @card = current_user.build_card(card_params)
     if @card.save
-      render json: @card, status: :created, location: @card
+      render json: @card, status: :created
     else
       render json: @card.errors, status: :unprocessable_entity
     end
@@ -36,12 +36,13 @@ class CardsController < ApplicationController
   # DELETE /cards/1
   def destroy
     @card.destroy
+    head :no_content
   end
 
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_card
-      @card = Card.find(params[:id])
+      @card = current_user.cards.find(params[:id])
     end
 
     # Only allow a trusted parameter "white list" through.
