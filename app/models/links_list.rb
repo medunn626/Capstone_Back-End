@@ -1,0 +1,2 @@
+class LinksList < ApplicationRecord
+end
