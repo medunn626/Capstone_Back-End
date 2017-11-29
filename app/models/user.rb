@@ -3,6 +3,6 @@
 class User < ApplicationRecord
   include Authentication
   has_many :examples
-  has_many :card
+  has_many :cards
   has_many :links_lists
 end
