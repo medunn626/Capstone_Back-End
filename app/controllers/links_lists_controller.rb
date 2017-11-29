@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class LinksListsController < ProtectedController
-  before_action :set_links_list, only: %i[index show update destroy]
+  before_action :set_links_list, only: %i[show update destroy]
 
   # GET /links_lists
   def index
@@ -16,7 +16,7 @@ class LinksListsController < ProtectedController
 
   # POST /links_lists
   def create
-    @links_list = current_user.build_links_list(links_list_params)
+    @links_list = current_user.links_lists.build(links_list_params)
     if @links_list.save
       render json: @links_list, status: :created
     else
@@ -42,11 +42,11 @@ class LinksListsController < ProtectedController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_links_list
-      @links_list = current_user.links_list.find(params[:id])
+      @links_list = current_user.links_lists.find(params[:id])
     end
 
     # Only allow a trusted parameter "white list" through.
     def links_list_params
-      params.require(:links_list).permit(:linkedin, :facebook, :instagram, :twitter, :other)
+      params.require(:links_list).permit(:linkedin, :facebook, :instagram, :twitter, :other, :card_id)
     end
 end
