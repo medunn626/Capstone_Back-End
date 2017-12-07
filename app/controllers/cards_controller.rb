@@ -1,13 +1,18 @@
 # frozen_string_literal: true
 
-class CardsController < ProtectedController
-  before_action :set_card, only: %i[show update destroy]
+class CardsController < OpenReadController
+  before_action :set_card_private, only: %i[update destroy]
+  before_action :set_card_public, only: %i[show]
 
   # GET /cards
   def index
     @cards = current_user.cards
     render json: @cards
   end
+  # def index
+  #   @cards = Card.all
+  #   render json: @cards
+  # end
 
   # GET /cards/1
   def show
@@ -41,7 +46,14 @@ class CardsController < ProtectedController
 
   private
     # Use callbacks to share common setup or constraints between actions.
-    def set_card
+    # def set_card
+    #   @card = current_user.cards.find(params[:id])
+    # end
+    def set_card_public
+      @card = Card.find(params[:id])
+    end
+
+    def set_card_private
       @card = current_user.cards.find(params[:id])
     end
 
